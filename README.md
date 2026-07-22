@@ -16,8 +16,10 @@ pnpm dev
 pnpm test
 ```
 
-Open the local URL printed by `pnpm dev`, then scroll through the canvas
-section to see the frame number change.
+Open the local URL printed by `pnpm dev`. On the starter branch the canvas
+stays on frame 0 until you implement `progressToFrameIndex` in
+`src/lib/scrollFrames.ts` (see the TODO). After that, scrolling through the
+canvas section scrubs the frame sequence.
 
 ## Workshop workflow
 

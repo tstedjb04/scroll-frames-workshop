@@ -44,9 +44,9 @@ export function ScrollCanvas() {
     for (let i = 0; i < FRAME_COUNT; i++) {
       const image = new Image();
 
-      image.src = frameSrc(i);
       image.onload = () => settle(i, image);
       image.onerror = () => settle(i);
+      image.src = frameSrc(i);
     }
 
     return () => {
