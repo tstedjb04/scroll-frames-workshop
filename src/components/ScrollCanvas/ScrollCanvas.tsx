@@ -13,34 +13,40 @@ import * as styles from "./ScrollCanvas.style";
 export function ScrollCanvas() {
   const sectionRef = useRef<HTMLElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const framesRef = useRef<HTMLImageElement[]>([]);
+  const framesRef = useRef<(HTMLImageElement | undefined)[]>([]);
   const [ready, setReady] = useState(false);
   const [loadProgress, setLoadProgress] = useState(0);
   const rafRef = useRef<number | null>(null);
 
   useEffect(() => {
     let cancelled = false;
-    const images: HTMLImageElement[] = [];
-    let loaded = 0;
+    const images: (HTMLImageElement | undefined)[] = new Array(FRAME_COUNT);
+    let settled = 0;
+
+    const settle = (index: number, image?: HTMLImageElement) => {
+      if (cancelled) {
+        return;
+      }
+
+      if (image) {
+        images[index] = image;
+      }
+
+      settled += 1;
+      setLoadProgress(Math.round((settled / FRAME_COUNT) * 100));
+
+      if (settled === FRAME_COUNT) {
+        framesRef.current = images;
+        setReady(true);
+      }
+    };
 
     for (let i = 0; i < FRAME_COUNT; i++) {
       const image = new Image();
 
       image.src = frameSrc(i);
-      image.onload = () => {
-        if (cancelled) {
-          return;
-        }
-
-        loaded += 1;
-        setLoadProgress(Math.round((loaded / FRAME_COUNT) * 100));
-
-        if (loaded === FRAME_COUNT) {
-          framesRef.current = images;
-          setReady(true);
-        }
-      };
-      images[i] = image;
+      image.onload = () => settle(i, image);
+      image.onerror = () => settle(i);
     }
 
     return () => {
