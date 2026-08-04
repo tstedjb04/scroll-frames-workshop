@@ -3,10 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 
 import { FRAME_COUNT, frameSrc } from "@/lib/frames";
-import {
-  getScrollProgress,
-  progressToFrameIndex,
-} from "@/lib/scrollFrames";
+import { getScrollProgress, progressToFrameIndex } from "@/lib/scrollFrames";
 
 import * as styles from "./ScrollCanvas.style";
 
@@ -87,7 +84,7 @@ export function ScrollCanvas() {
       const progress = getScrollProgress(
         window.scrollY,
         section.offsetTop,
-        scrollRange,
+        scrollRange
       );
       const index = progressToFrameIndex(progress, framesRef.current.length);
       const image = framesRef.current[index];
@@ -98,7 +95,7 @@ export function ScrollCanvas() {
 
       const scale = Math.max(
         width / image.naturalWidth,
-        height / image.naturalHeight,
+        height / image.naturalHeight
       );
       const drawnWidth = image.naturalWidth * scale;
       const drawnHeight = image.naturalHeight * scale;
@@ -138,9 +135,7 @@ export function ScrollCanvas() {
     <section ref={sectionRef} className={styles.section}>
       <div className={styles.sticky}>
         {!ready && (
-          <div className={styles.loading}>
-            Loading frames… {loadProgress}%
-          </div>
+          <div className={styles.loading}>Loading frames… {loadProgress}%</div>
         )}
         <canvas ref={canvasRef} className={styles.canvas} />
         <p className={styles.hint}>Scroll to scrub frames</p>
